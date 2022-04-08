@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "npm install && docker-compose up -d && cd client && npm install && npm run dev",
-    "build": ""
+    "build": "npm install && docker-compose up -d && cd client && npm install && npm run build"
   },
   "author": "Dest.Com",
   "license": "ISC"

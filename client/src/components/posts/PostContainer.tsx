@@ -47,7 +47,7 @@ const PostContainer = ({updateTrigger}: AppProps) => {
      }, [data, error, loading, updateTrigger]);
 
     return <div className="w-1/2 overflow-y-scroll flex flex-col m-auto align-center lg:max-h-[75vh] scrollbar scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
-        {data && data.map((post:any) => <Post key={post.id} post={post} />)}
+        {data && data.map((post:PostType) => <Post key={post.id} post={post} />)}
         {(!data && !error) && <p className='text-center'>LOADING</p>}
         {error && <p className='text-center'>No posts yet !</p>}
     </div>

@@ -1,11 +1,13 @@
 import { useState } from "react";
+
+import { UserType } from "../../assets/helpers/Users";
 import CreatePost from "../forms/CreatePost";
 import Header from "../Header";
 import PostContainer from "../posts/PostContainer";
 
 type AppProps = {
     setDisplayLogged: any;
-    userInfo:any;
+    userInfo: UserType;
   };
 
 const Results = ({setDisplayLogged, userInfo}: AppProps) =>{

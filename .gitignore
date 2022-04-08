@@ -3,3 +3,6 @@ build
 credentials
 credentials.*
 .env
+backup-*
+server/index.html
+server/assets

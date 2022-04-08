@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 
 import Login from './forms/Login';
 import Results from './results/Results';
+import { UserType } from '../assets/helpers/Users';
 
 import '../assets/styles/App.css'
 
 function App() {
 
-  const [displayLogged, setDisplayLogged] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
+  const [displayLogged, setDisplayLogged] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState< UserType | null>(null);
 
   useEffect(() => {
     const token = document.cookie.split('loggerz-token=')[1];
@@ -27,7 +28,7 @@ function App() {
 
   return (<>
   <div className="App lg:h-screen min-h-screen w-screen flex item-center m-auto bg-color-1 py-5">
-      {displayLogged ? <Results setDisplayLogged={setDisplayLogged} userInfo={userInfo} /> :  <Login displayLogged={displayLogged}  setDisplayLogged={setDisplayLogged} />}
+      {displayLogged ? <Results setDisplayLogged={setDisplayLogged} userInfo={userInfo!} /> :  <Login displayLogged={displayLogged}  setDisplayLogged={setDisplayLogged} />}
     </div></>)
 }
 

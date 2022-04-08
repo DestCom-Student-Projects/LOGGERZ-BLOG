@@ -4,7 +4,7 @@ import Header from '../Header';
 import PostContainer from '../posts/PostContainer';
 
 type AppProps = {
-    displayLogged: any;
+    displayLogged: boolean;
     setDisplayLogged: any;
 };
 
@@ -30,16 +30,20 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
             .catch(error => console.error("Error:", error))
             .then(data => {
                 console.log(data);
-                if(data.status === "success") {
-                    console.log("success");
-                    document.cookie = `loggerz-token=${data.uid}; path=/;`;
-                    setDisplayLogged(true);
+                if (data.status === "fail") {
+                    if(data.error === "User not found") setError("User not found");
+                    if(data.error === "Wrong password") setError("Wrong password");
+                    return;
                 }
+
+                console.log("success");
+                document.cookie = `loggerz-token=${data.uid}; path=/;`;
+                setDisplayLogged(true);
             });
         } else {
-            if (retypePassword === null) return;
-            if (password !== retypePassword) return;
-            console.log("register");
+            if (retypePassword === null) return setError("Please fill all fields");
+            if (password !== retypePassword) return setError("Passwords do not match");
+            
             fetch("http://localhost:2345/register.php", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
