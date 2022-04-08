@@ -28,6 +28,7 @@ if (!is_array($object)) {
 if(isset($object['username']) && isset($object['password'])){
     $username = $object['username'];
     $password = $object['password'];
+    $password = base64_decode($password);
     
     $userManager = new UserManager;
     $user = $userManager->readByUsername($username);
@@ -40,25 +41,36 @@ if(isset($object['username']) && isset($object['password'])){
         echo json_encode($arr);
         die;
     }
-
-    if(password_verify($password, $user->getPassword())){
-        $arr = array(
+    
+    /* $arr = array(
             'status' => 'fail',
             'error' => 'Wrong password',
             'passwordSent' => $password,
             'passwordStored' => $user->getPassword(),
         );
         echo json_encode($arr);
+        die; */
+
+    //check if the password is correct
+    if(password_verify($password, $user->getPassword())){
+        $arr = array(
+            'status' => 'success',
+            'id' => $user->getId(),
+            'username' => $user->getUsername(),
+            'uid' => $user->getUid(),
+            'created_at' => $user->getCreatedAt(),
+        );
+        echo json_encode($arr);
         die;
     }
-
-    $arr = array(
-        'status' => 'success',
-        'id' => $user->getId(),
-        'username' => $user->getUsername(),
-        'uid' => $user->getUid(),
-        'created_at' => $user->getCreatedAt(),
-    );
+    else{
+        $arr = array(
+            'status' => 'fail',
+            'error' => 'Wrong password',
+        );
+        echo json_encode($arr);
+        die;
+    }
 }
 else{
     $arr = array(

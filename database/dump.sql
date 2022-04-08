@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : db
--- Généré le : ven. 08 avr. 2022 à 13:38
+-- Généré le : ven. 08 avr. 2022 à 14:58
 -- Version du serveur : 10.7.3-MariaDB-1:10.7.3+maria~focal
 -- Version de PHP : 8.0.16
 
@@ -40,7 +40,7 @@ CREATE TABLE `posts` (
 --
 
 INSERT INTO `posts` (`id`, `author_uid`, `title`, `content`, `created_at`) VALUES
-(21, '62501049e23de', 'Mon super article !', 'Ceci est un simple post tout ce qu\'il y a de plus basique.', '2022-04-08 13:33:35');
+(32, '62504d3edc549', 'My ultimate article !', 'THIS IS AWESOME !', '2022-04-08 14:57:36');
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `password`, `uid`, `created_at`) VALUES
-(12, 'moonsun', '$2y$10$Ozmo8EOKwrdjl65OrwqZJ.dlH9MP.0uC023rj0dN8dE0TcGOh5eD6', '62501049e23de', '2022-04-08');
+(26, 'moonsun', '$2y$10$DMVixUJ8KHPkiri0jt1h6uVpa.2paIi3dFXOoeYCBP5qKlrfK.HtO', '62504d3edc549', '2022-04-08');
 
 --
 -- Index pour les tables déchargées
@@ -87,13 +87,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT pour la table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT pour la table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

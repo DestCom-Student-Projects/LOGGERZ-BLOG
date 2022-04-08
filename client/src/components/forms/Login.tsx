@@ -14,6 +14,7 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
     const [password, setPassword] = useState<string | null>(null);
     const [retypePassword, setRetypePassword] = useState<string | null>(null);
     const [loginType, setLoginType] = useState<string>("register");
+    const [error, setError] = useState<string | null>(null);
 
     const submitted = (e:any) => {
         e.preventDefault();
@@ -23,7 +24,7 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
             fetch("http://localhost:2345/login.php", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: username, password: password })
+                body: JSON.stringify({ username: username, password: btoa(password) })
             })
             .then(res => res.json())
             .catch(error => console.error("Error:", error))
@@ -42,12 +43,17 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
             fetch("http://localhost:2345/register.php", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: username, password: password })
+                body: JSON.stringify({ username: username, password: btoa(password) })
             })
             .then(res => res.json())
             .catch(error => console.error("Error:", error))
             .then(data => {
-                alert(data)
+                if (data.status === "fail") {
+                    if(data.error === "User already exists") {
+                        setError("User already exists");
+                    }
+                    return;
+                }
                 document.cookie = `loggerz-token=${data.token}; path=/`;
                 setDisplayLogged(true);
             });
@@ -75,6 +81,7 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
                 <input type={'text'} className="outline-none bg-transparent placeholder:text-gray-500 text-gray-500 border-2 border-gray-500 rounded my-2 mx-auto p-2" placeholder="Username" onChange={(e) => setUsername(e.target.value)}  />
                 <input type={'text'} className="outline-none bg-transparent placeholder:text-gray-500 text-gray-500 border-2 border-gray-500 rounded my-2 mx-auto p-2" placeholder="Password" onChange={(e) => setPassword(e.target.value)} />
                 {loginType === "register" && <input type={'text'} className="outline-none bg-transparent placeholder:text-gray-500 text-gray-500 border-2 border-gray-500 rounded my-2 mx-auto p-2" placeholder="Retype password" onChange={(e) => setRetypePassword(e.target.value)} /> }
+                {error !== null && <div className="text-red-500 text-sm">{error}</div>}
                 <div onClick={(e)=>submitted(e)} className={`w-1/2% m-auto bg-color-1 text-lg rounded my-2 text-gray-400 py-2 text-center ${((loginType==="login" && username && password) || (loginType==="register" && username && (password && setRetypePassword))) ? "hover:bg-color-2 cursor-pointer" : "cursor-not-allowed"}`}>{loginType === "login" ? 'Sign In' : 'Sign Up'}</div>
                 {loginType === "login" ? <div onClick={(e)=> changeLoginType(e, "register")} className="text-gray-500 h-3 text-base italic mb-3 hover:text-gray-400 hover:underline cursor-pointer">Register</div> : <div onClick={(e)=> changeLoginType(e, "login")} className="text-gray-500 h-3 text-base italic mb-3 hover:text-gray-400 hover:underline cursor-pointer">I already have an account</div>}
             </div>

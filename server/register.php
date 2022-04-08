@@ -29,11 +29,23 @@ if (!is_array($object)) {
 if(isset($object['username']) && isset($object['password'])){
     $username = $object['username'];
     $password = $object['password'];
-    $password = hash('sha256', $password);
+    $password = base64_decode($password);
     $username = htmlspecialchars($username);
     $password = htmlspecialchars($password);
     $password =  password_hash($password, PASSWORD_DEFAULT);
     
+    $userManager = new UserManager;
+    $user = $userManager->readByUsername($username);
+
+    if($user !== null){
+        $arr = array(
+            'status' => 'fail',
+            'error' => 'User already exists',
+        );
+        echo json_encode($arr);
+        die;
+    }
+
     $user = new User();
     $user->setUsername($username);
     $user->setPassword($password);
@@ -45,6 +57,7 @@ if(isset($object['username']) && isset($object['password'])){
 
     $arr = array(
 		'token' => $uid,
+        'password' => $password,
 	);
 }
 else{
