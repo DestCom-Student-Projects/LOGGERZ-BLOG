@@ -1,8 +1,8 @@
 {
   "name": "loginz",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A blog with a front-end in react and a back-end in pure PHP, using docker",
+  "main": "",
   "scripts": {
     "start": "npm install && docker-compose up -d && cd client && npm install && npm run dev",
     "build": "npm install && docker-compose up -d && cd client && npm install && npm run build"
