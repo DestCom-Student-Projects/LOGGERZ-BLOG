@@ -65,6 +65,8 @@ if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST'){
  
     if (!is_array($object)) {
         $arr = array(
+            'status' => 'error',
+            'message' => 'Invalid JSON',
             'error' => 'Fail to decode JSON',
         );
         echo json_encode($arr);
@@ -74,6 +76,8 @@ if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST'){
 
     if (!isset($object['title']) && !isset($object['content']) && !isset($object['author_uid'])) {
         $arr = array(
+            'status' => 'fail',
+            'message' => 'Missing parameters',
             'error' => 'Missing informations',
         );
         echo json_encode($arr);
