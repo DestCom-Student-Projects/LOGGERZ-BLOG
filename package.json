@@ -1,0 +1,12 @@
+{
+  "name": "loginz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm install && docker-compose up -d && cd client && npm install && npm run dev",
+    "build": ""
+  },
+  "author": "Dest.Com",
+  "license": "ISC"
+}
