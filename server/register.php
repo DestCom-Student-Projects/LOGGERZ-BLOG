@@ -3,9 +3,19 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 
+require __DIR__ . '/vendor/autoload.php';
+
 spl_autoload_register(function($className){
     require $className . '.php';
 });
+
+use Firebase\JWT\JWT;
+
+$res = openssl_pkey_new();
+openssl_pkey_export_to_file($res, './rsaPrivateKey.key');
+$privateKey = file_get_contents('./rsaPrivateKey.key');
+$res = openssl_pkey_get_private($privateKey);
+
 
 if (strtoupper($_SERVER['REQUEST_METHOD']) != 'POST') {
     $arr = array(
@@ -32,7 +42,7 @@ if(isset($object['username']) && isset($object['password'])){
     $password = base64_decode($password);
     $username = htmlspecialchars($username);
     $password = htmlspecialchars($password);
-    $password =  password_hash($password, PASSWORD_DEFAULT);
+    $password = password_hash($password, PASSWORD_DEFAULT);
     
     $userManager = new UserManager;
     $user = $userManager->readByUsername($username);
@@ -55,10 +65,27 @@ if(isset($object['username']) && isset($object['password'])){
     $userManager = new UserManager();
     $create = $userManager->create($user);
 
+    $key = openssl_pkey_get_details($res)['key'];
+    $payload = [
+        'iss' => 'LOGGERZ',
+        'aud' => 'USERZ',
+        'iat' => time(),
+        'exp' => time() + 600,
+        'data' => [
+            'id' => $create,
+            'username' => $username,
+            'uid' => $uid,
+            'created_at' => $password,
+        ],
+    ];
+
+    $jwt = JWT::encode($payload, $key, 'HS256');
     $arr = array(
-		'token' => $uid,
-        'password' => $password,
-	);
+        'status' => 'success',
+        'token' => $jwt,
+        'psswd' => $object['password'],
+        "encrypt" => $password,
+    );
 }
 else{
     $arr = array(

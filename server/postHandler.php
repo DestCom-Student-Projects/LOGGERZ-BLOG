@@ -7,6 +7,13 @@ spl_autoload_register(function($className){
     require $className . '.php';
 });
 
+require __DIR__ . '/vendor/autoload.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+$privateKey = file_get_contents('./rsaPrivateKey.key');
+$res = openssl_pkey_get_private($privateKey);
+
 /* echo json_encode(array(
     'status' => 'ok',
     'message' => 'Hello World!',
@@ -62,6 +69,9 @@ if(strtoupper($_SERVER['REQUEST_METHOD']) === 'GET'){
 if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST'){
     $body = file_get_contents("php://input");
     $object = json_decode($body, true);
+
+    //Check if the JWT token is valid
+    $decoded = JWT::decode($object["token"], new Key(openssl_pkey_get_details($res)['key'], 'HS256'));
  
     if (!is_array($object)) {
         $arr = array(
@@ -73,8 +83,7 @@ if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST'){
         die;
     }
 
-
-    if (!isset($object['title']) && !isset($object['content']) && !isset($object['author_uid'])) {
+    if (!isset($object['title']) && !isset($object['content']) && !isset($decoded->data->uid)) {
         $arr = array(
             'status' => 'fail',
             'message' => 'Missing parameters',
@@ -86,7 +95,7 @@ if(strtoupper($_SERVER['REQUEST_METHOD']) === 'POST'){
 
     $title = $object['title'];
     $content = $object['content'];
-    $author_uid = $object['author_uid'];
+    $author_uid = $decoded->data->uid;
 
     $post = new Post();
     $post->setTitle($title);

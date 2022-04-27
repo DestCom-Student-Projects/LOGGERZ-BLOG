@@ -1,4 +1,6 @@
 import {useState, useEffect} from 'react';
+import axios from 'axios';
+import { axiosInstance } from '../../assets/helpers/AxiosInstances';
 
 import Post from "./Post";
 import { PostType } from '../../assets/helpers/Post';
@@ -20,19 +22,20 @@ const PostContainer = ({updateTrigger}: AppProps) => {
         setError(false);
         setLoading(true);
 
-        fetch("http://localhost:2345/postHandler.php?action=getAllPosts",{
-            method: "GET",
+        axios.get("http://localhost:2345/postHandler.php?action=getAllPosts")
+        .then(res => {
+            let data = res.data;
+            return data;
         })
-           .then(data => data.json())
-          .then(newData => {
+        .then(newData => {
             if(!isMounted) return  // This will cancel the setState when unmounted
             if(newData.status === "nopost") return setError(true);
             setData(newData);
             setError(false);
             setLoading(false);
-          })
-          .catch(function(error) {
-             console.log(error)
+        })
+        .catch(function(error) {
+            console.log(error)
             setData(null);
             setError(true);
             setLoading(false);

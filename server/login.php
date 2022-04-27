@@ -2,6 +2,18 @@
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 
+require __DIR__ . '/vendor/autoload.php';
+
+use Firebase\JWT\JWT;
+
+$res = openssl_pkey_new();
+openssl_pkey_export_to_file($res, './rsaPrivateKey.key');
+$privateKey = file_get_contents('./rsaPrivateKey.key');
+$res = openssl_pkey_get_private($privateKey);
+
+/* echo openssl_pkey_get_details($res)['key'];
+die; */
+
 spl_autoload_register(function($className){
     require $className . '.php';
 });
@@ -41,24 +53,25 @@ if(isset($object['username']) && isset($object['password'])){
         echo json_encode($arr);
         die;
     }
-    
-    /* $arr = array(
-            'status' => 'fail',
-            'error' => 'Wrong password',
-            'passwordSent' => $password,
-            'passwordStored' => $user->getPassword(),
-        );
-        echo json_encode($arr);
-        die; */
 
-    //check if the password is correct
     if(password_verify($password, $user->getPassword())){
+        $key = openssl_pkey_get_details($res)['key'];
+        $payload = [
+            'iss' => 'LOGGERZ',
+            'aud' => 'USERZ',
+            'iat' => time(),
+            'exp' => time() + 600,
+            'data' => [
+                'id' => $user->getId(),
+                'username' => $user->getUsername(),
+                'uid' => $user->getUid(),
+                'created_at' => $user->getCreatedAt(),
+            ],
+        ];
+        $jwt = JWT::encode($payload, $key, 'HS256');
         $arr = array(
             'status' => 'success',
-            'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'uid' => $user->getUid(),
-            'created_at' => $user->getCreatedAt(),
+            'token' => $jwt,
         );
         echo json_encode($arr);
         die;
@@ -66,7 +79,9 @@ if(isset($object['username']) && isset($object['password'])){
     else{
         $arr = array(
             'status' => 'fail',
-            'error' => 'Wrong password',
+            'error' => 'Wrong password',  
+            'password' => $password,
+            'hash' => $user->getPassword(),
         );
         echo json_encode($arr);
         die;
@@ -80,4 +95,5 @@ else{
 
 echo json_encode($arr);
 
+?>
 ?>

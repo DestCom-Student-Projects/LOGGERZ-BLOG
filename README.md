@@ -27,3 +27,8 @@ Simply do a `npm start` at the root of the project
 
 Simply do a `npm run build` at the root of the project  
 (This will launch a production environment, to access the application please go to [http://localhost:2345](localhost:2345))
+
+#### Default user
+
+    username: moonsun
+    password: moonsun

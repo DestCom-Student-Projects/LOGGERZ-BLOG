@@ -1,7 +1,10 @@
 import { useState } from 'react'
+import axios from 'axios';
 
 import Header from '../Header';
 import PostContainer from '../posts/PostContainer';
+
+import { axiosInstance } from '../../assets/helpers/AxiosInstances';
 
 type AppProps = {
     displayLogged: boolean;
@@ -20,13 +23,11 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
         e.preventDefault();
         if(username === null || password === null) return;
         if(loginType === "login") {
-            console.log("login");
-            fetch("http://localhost:2345/login.php", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: username, password: btoa(password) })
+            axiosInstance.post("/login.php",{ username: username, password: btoa(password) })
+            .then(res => {
+                let data = res.data;
+                return data;
             })
-            .then(res => res.json())
             .catch(error => console.error("Error:", error))
             .then(data => {
                 console.log(data);
@@ -35,21 +36,19 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
                     if(data.error === "Wrong password") setError("Wrong password");
                     return;
                 }
-
                 console.log("success");
-                document.cookie = `loggerz-token=${data.uid}; path=/;`;
+                document.cookie = `loggerz-token=${data.token}; path=/;`;
                 setDisplayLogged(true);
-            });
+            });   
         } else {
             if (retypePassword === null) return setError("Please fill all fields");
             if (password !== retypePassword) return setError("Passwords do not match");
             
-            fetch("http://localhost:2345/register.php", {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username: username, password: btoa(password) })
+            axiosInstance.post("/register.php",{ username: username, password: btoa(password) })
+            .then(res => {
+                let data = res.data;
+                return data;
             })
-            .then(res => res.json())
             .catch(error => console.error("Error:", error))
             .then(data => {
                 if (data.status === "fail") {
@@ -61,6 +60,7 @@ const Login = ({displayLogged,setDisplayLogged} : AppProps) => {
                 document.cookie = `loggerz-token=${data.token}; path=/`;
                 setDisplayLogged(true);
             });
+            
         }
     }
 

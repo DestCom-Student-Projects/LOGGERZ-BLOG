@@ -6,3 +6,7 @@ credentials.*
 backup-*
 server/index.html
 server/assets
+others
+vendor
+.composer
+rsaPrivateKey.key

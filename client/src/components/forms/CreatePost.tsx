@@ -1,5 +1,7 @@
 import { useState, useRef } from "react";
+
 import { getCookie } from "../../assets/functions/GetCookie";
+import { axiosInstance } from "../../assets/helpers/AxiosInstances";
 
 type AppProps = {
     setUpdateTrigger: any;
@@ -24,12 +26,15 @@ const CreatePost = ({setUpdateTrigger, userInfo}:AppProps) => {
 
         if(token === null || token === undefined || token === "undefined") return setRes("You must be logged in to create a post");
 
-        fetch("http://localhost:2345/postHandler.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title: title, content: content, author_uid: token})
+        axiosInstance.post("/postHandler.php",{
+            title: title, 
+            content: content,
+            token: token
         })
-        .then(res => res.json())
+        .then(res => {
+            let data = res.data;
+            return data;
+        })
         .catch(error => {console.error("Error:", error); setRes("Error: " + error)})
         .then(data => {
             console.log(data);
@@ -41,7 +46,6 @@ const CreatePost = ({setUpdateTrigger, userInfo}:AppProps) => {
             setContent(null);
             setRes("Post created successfully!");
         });
-
     };
 
     return ( 

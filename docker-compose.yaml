@@ -10,6 +10,12 @@ services:
         volumes:
             - ./server:/var/www/html
 
+    #composer:
+        #image: composer
+        #volumes:
+        #  - ./server:/var/www/html
+        #working_dir: /var/www/html
+
     db:
         image: 'mariadb'
         restart: always
@@ -28,3 +34,17 @@ services:
             - '8080:80'
         environment:
             - PMA_ARBITRARY=1
+
+    ##install composer and firebase-jwt and add it to php
+    composer:
+        image: composer
+        restart: 'no'
+        volumes:
+            - ./server:/var/www/html
+        working_dir: /var/www/html
+        environment:
+            - COMPOSER_HOME=/var/www/html/.composer
+            - COMPOSER_CACHE_DIR=/var/www/html/.composer/cache
+        command: composer install
+        depends_on:
+            - php
