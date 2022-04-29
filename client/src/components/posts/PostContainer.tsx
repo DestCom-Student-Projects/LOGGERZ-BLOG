@@ -22,7 +22,7 @@ const PostContainer = ({updateTrigger}: AppProps) => {
         setError(false);
         setLoading(true);
 
-        axios.get("http://localhost:2345/postHandler.php?action=getAllPosts")
+        axios.get("http://localhost:5555/postHandler.php?action=getAllPosts")
         .then(res => {
             let data = res.data;
             return data;

@@ -3,7 +3,7 @@ import { getCookie } from "../functions/GetCookie";
 import {JWTHandler} from "./JWTHandler";
 
 export const axiosInstance = axios.create({
-    baseURL: "http://localhost:2345"
+    baseURL: "http://localhost:5555"
 });
 
 axiosInstance.interceptors.request.use(

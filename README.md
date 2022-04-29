@@ -16,7 +16,7 @@ You can create an account or login to another one, once logged in you can post a
 
 ## Installation
 
-__*You need to had docker installed*__  
+**_You need to had docker installed_**
 
 ### Developement mode
 
@@ -26,7 +26,7 @@ Simply do a `npm start` at the root of the project
 ### Production mode
 
 Simply do a `npm run build` at the root of the project  
-(This will launch a production environment, to access the application please go to [http://localhost:2345](localhost:2345))
+(This will launch a production environment, to access the application please go to [http://localhost:5555](localhost:5555))
 
 #### Default user
 

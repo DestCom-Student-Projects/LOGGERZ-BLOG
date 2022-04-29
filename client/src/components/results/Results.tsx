@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { UserType } from "../../assets/helpers/Users";
 import CreatePost from "../forms/CreatePost";
@@ -8,15 +9,24 @@ import PostContainer from "../posts/PostContainer";
 type AppProps = {
     setDisplayLogged: any;
     userInfo: UserType;
+    displayLogged: boolean;
   };
 
-const Results = ({setDisplayLogged, userInfo}: AppProps) =>{
+const Results = ({setDisplayLogged, userInfo, displayLogged}: AppProps) =>{
 
+    const navigate = useNavigate();
     const [updateTrigger, setUpdateTrigger] = useState(null)
+
+    useEffect(() => {
+        if(!displayLogged){
+            navigate("/");
+        } 
+    }, []);
 
     const disconnect = () => {
         document.cookie = `loggerz-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
         setDisplayLogged(false);
+        window.location.reload();
     }
 
     return <div className="lg:w-11/12 w-11/12 m-auto bg-gray-800 shadow-2xl rounded-lg overflow-hidden lg:max-h-vp11/12">
